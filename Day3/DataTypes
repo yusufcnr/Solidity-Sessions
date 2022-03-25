@@ -1,0 +1,62 @@
+//SPDX-License-Identifier:MIT
+
+pragma solidity^0.8.4;
+
+contract DataTypes {
+
+string myString = "This is my string for pair programming";
+
+
+int public minNum = type(int).min;
+uint public minNum2 = type(uint).min;
+int number;
+bool public isStarted;
+address public owner = msg.sender;
+address public walletAddress = 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2;
+bytes public value ;
+mapping (address => uint) public balances; 
+string [] public myArray;
+
+
+function encode () public view returns (bytes memory) {
+    bytes memory encode = abi.encode("hello");
+
+}
+
+function increment() public {
+
+    number ++ ;
+}
+
+function decrement () public {
+    number -- ;
+
+}
+
+function changeBool (bool _trueOrFalse) public {
+
+    isStarted = _trueOrFalse;
+}
+ function addToBalance (address _addr, uint _amount) public{
+
+     balances[_addr] += _amount; 
+ }
+
+ function readBalance(address _addr) public view returns (uint ){
+
+     return balances[_addr];
+
+ }
+
+ function addToArray(string memory _name) public {
+
+     myArray.push(_name);
+
+ }
+
+ function removeFromArray() public {
+     myArray.pop();
+ } 
+
+
+}
