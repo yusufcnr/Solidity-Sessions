@@ -13,30 +13,59 @@ uint public oneEther = 1 ether;
 uint public oneWei = oneWei = 1 wei;
 uint public oneGwei = 1 gwei;
 uint public currentBlockNumber = block.number;
-mapping (address => uint) public balances;
 
-function encode () public view returns (bytes memory) {
+
+function encodeDecode(string memory str, uint num) public view returns (string memory, uint) {
+
+    (str, num)= abi.decode(abi.encodePacked(str, num), (string, uint));
+
+    return (str, num);
+
+}
+
+struct Person {
+    string name;
+    uint age;
+    uint yearOfBirth;
+}
+
+enum Step {
+    stepZero,
+    stepOne,
+    stepTwo,
+    step3
+}
+
+Step steps;
+Person [] public people;
+mapping (address => Person) public peopleMapping;
+
+
+function encode () internal view returns (bytes memory) {
     return abi.encodePacked(number, greeeting);
 }
 
-function deCode() public view returns (string memory greeeting, uint number)  {
-bytes memory data = encode();
-(number, greeeting) = abi.decode(data, (string, uint256));
-
-}
-function deposit () public payable returns (uint) {
-    return balances[msg.sender];
-}
 
 function getHash () public view returns (bytes32) {
-    bytes data = keccak256(number, memory greeeting);
+    return keccak256(encode());
 }
 
-event Transfer(address indexed from, address indexed to, uint amoun) 
+function deCode() public view returns (uint number, string memory greeeting)  {
+bytes memory data = encode();
+(number, greeeting) = abi.decode(data, (uint256,string));
+}
+
+mapping(address => uint) public balances;
+
+function deposit () public payable {
+ balances[msg.sender]+= msg.value;
+}
+
+event Transfer(address indexed from, address indexed to, uint amount); 
 
 function transfer (address payable _to) public payable {
-    (bool success, ) = _to.call(value:msg.value)("");
-    require(success, "error");
+    (bool success, ) = _to.call{value: msg.value}("");
+    require(success, "Cannot send ehter!");
     emit Transfer(msg.sender, _to, msg.value);
 
 }
